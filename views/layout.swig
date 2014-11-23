@@ -27,8 +27,6 @@
           <ul class="nav nav-pills pull-right">
             <li role="presentation" class="active"><a href="/home">Add</a></li>
             <li role="presentation"><a href="/pay">Pay</a></li>
-            <li role="presentation"><a href="/auth/facebook">Login</a></li>
-            <li role="presentation"><a href="/logout">Logout</a></li>
           </ul>
         </nav>
         <h3 class="text-muted">SEALS</h3>
