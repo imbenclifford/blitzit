@@ -1,10 +1,20 @@
 var handlers = require("./handlers.js");
 
 module.exports = [
-	{
+  {
     method: 'GET',
     path:  '/home',
-	handler: handlers.home
+  handler: handlers.home
+},
+{
+  method: 'GET',
+  path:'/auth',
+  handler: handlers.auth
+},
+{
+  method: 'GET',
+  path:'/callback1',
+  handler: handlers.callback
 },
 {
   method : "GET",
