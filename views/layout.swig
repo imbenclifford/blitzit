@@ -7,8 +7,7 @@
 	<meta name="description" content="">
 	<meta name="author" content="">
 	<link rel="icon" href="../../favicon.ico">
-	
-  <title>{% block title %}SEALS{% endblock %}</title>
+  <title>{% block title %}Blitzit{% endblock %}</title>
 
   {% block head %}
 		<!-- Bootstrap core CSS -->
@@ -29,13 +28,13 @@
             <li role="presentation"><a href="/pay">Pay</a></li>
           </ul>
         </nav>
-        <h3 class="text-muted">SEALS</h3>
+        <h3 class="text-muted">Blitzit</h3>
       </div>
   {% block content %}{% endblock %}
 	
 	
 <footer class="footer">
-        <p>&copy; SEALS 2014</p>
+        <p>&copy; Blitzit 2014</p>
       </footer>
 
     </div> <!-- /container -->

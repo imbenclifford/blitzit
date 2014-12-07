@@ -3,18 +3,67 @@ var handlers = require("./handlers.js");
 module.exports = [
   {
     method: 'GET',
-    path:  '/home',
-  handler: handlers.home
-},
-{
-  method: 'GET',
-  path:'/auth',
-  handler: handlers.auth
-},
-{
-  method: 'GET',
-  path:'/callback1',
-  handler: handlers.callback
+    path:'/auth',
+    config: {
+                auth: {
+                    mode: 'try',
+                    strategy: 'session'
+                },
+                plugins: {
+                    'hapi-auth-cookie': {
+                        redirectTo: false
+                    }
+                }
+            },
+    handler: handlers.auth
+  },
+  {
+    method: 'GET',
+    path: '/callback',
+    config: {
+                auth: {
+                    mode: 'try',
+                    strategy: 'session'
+                },
+                plugins: {
+                    'hapi-auth-cookie': {
+                        redirectTo: false
+                    }
+                }
+            },
+    handler: handlers.callback
+  },
+  {
+    method: 'GET',
+    path: '/statuses',
+    config: {
+                auth: {
+                    mode: 'required',
+                    strategy: 'session'
+                },
+                plugins: {
+                    'hapi-auth-cookie': {
+                        redirectTo: false
+                    }
+                }
+            },
+    handler: handlers.statuses
+  },
+  {
+    method: 'POST',
+    path: '/create',
+    config: {
+                auth: {
+                    mode: 'try',
+                    strategy: 'session'
+                },
+                plugins: {
+                    'hapi-auth-cookie': {
+                        redirectTo: false
+                    }
+                }
+            },
+    handler: handlers.create
 },
 {
   method : "GET",
