@@ -8,7 +8,6 @@
 	<meta name="author" content="">
 	<link rel="icon" href="../../favicon.ico">
   <title>{% block title %}Blitzit{% endblock %}</title>
-
   {% block head %}
 		<!-- Bootstrap core CSS -->
     <link href="../../dist/css/bootstrap.min.css" rel="stylesheet">

@@ -66,6 +66,22 @@ module.exports = [
     handler: handlers.create
 },
 {
+    method: 'POST',
+    path: '/completed',
+    config: {
+                auth: {
+                    mode: 'try',
+                    strategy: 'session'
+                },
+                plugins: {
+                    'hapi-auth-cookie': {
+                        redirectTo: false
+                    }
+                }
+            },
+    handler: handlers.completed
+},
+{
   method : "GET",
   path :  "/{param*}",
   handler :  {

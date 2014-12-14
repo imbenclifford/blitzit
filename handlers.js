@@ -56,7 +56,8 @@ exports.loadEntry = {
             console.log("THIS IS WHAT I WAS LOOKING 44444 " + JSON.stringify(callback))
             res.view('updates.swig', {status: callback.updates[0].text,
                                         date: callback.updates[0].day,
-                                        time: callback.updates[0].due_time})
+                                        time: callback.updates[0].due_time,
+                                        id: callback.updates[0].id})
             })
         });
     };
@@ -68,12 +69,30 @@ exports.loadEntry = {
             if (error){
                     console.log(error + " --login CREATEnono")
             }
-            user.createStatus("We", [sid], function(error, callback){
+            user.createStatus("I failed to " + req.payload.task + "! Hopefully posting this through bit.ly/blitzitio will mean I do better next time" , [sid], function(error, callback){
                 if (error){
                     console.log(error)
                 }
                 console.log("I sure this MUST have posted" + JSON.stringify(callback) + "--the sid--" + sid + "--the code--" + code)
             })
             res('wootwoo')
+        });
+    }
+
+    exports.completed = function (req, res){
+        console.log('LOAD THIS' + JSON.stringify(req.payload))
+        var code = req.auth.artifacts.code
+        var sid = req.auth.artifacts.sid
+        bufferapp.login(code, function (error, user) {
+            if (error){
+                    console.log(error + " --login COMPLETEnono")
+            }
+            user.updateStatus(req.payload.id, "I just " + req.payload.task + "! I'm not showing off - bit.ly/blitzitio posted this on my behalf" , false, [], false, 1515582000, function(error, callback){
+                if (error){
+                    console.log(error)
+                }
+                console.log("HOPES this has posted " + JSON.stringify(callback) + "--the sid--" + sid + "--the code--" + code)
+            })
+            res('twootwoow')
         });
     }
