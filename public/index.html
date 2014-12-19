@@ -42,7 +42,7 @@
                 <!-- LOOP OVER THE TODOS IN $scope.todos -->
                 <div class="checkbox" ng-repeat="todo in todos">
                     <label>
-                        <input type="checkbox" ng-click="deleteTodo(todo._id)"> {{ todo.text }}
+                        <input type="checkbox" ng-click="deleteTodo(todo._id)"> {{ todo.text }} {{ todo.date }}
                     </label>
                 </div>
 
@@ -57,6 +57,7 @@
 
                         <!-- BIND THIS VALUE TO formData.text IN ANGULAR -->
                         <input type="text" class="form-control input-lg text-center" placeholder="I want to buy a puppy that will love me forever" ng-model="formData.text">
+                        <input type="date" class="form-control input-lg text-center" placeholder="I want to buy a puppy that will love me forever" ng-model="formData.date">
                     </div>
 
                     <!-- createToDo() WILL CREATE NEW TODOS -->

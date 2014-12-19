@@ -12,10 +12,8 @@ var Todo = require('./models/todo');
 
 function getTodos(res){
     Todo.find(function(err, todos) {
-
-            // if there is an error retrieving, send the error. nothing after res.send(err) will execute
             if (err)
-                res.send(err)
+                res(err)
 
             res(todos); // return all todos in JSON format
         });
@@ -38,15 +36,16 @@ exports.getTD = function(req, res) {
     };
 
     // create todo and send back all todos after creation
-exports.createTD = function(req, res) {
+exports.create = function(req, res) {
 
         // create a todo, information comes from AJAX request from Angular
         Todo.create({
             text : req.payload.text,
+            date: req.payload.date,
             done : false
         }, function(err, todo) {
             if (err)
-                res.send(err);
+                res(err);
 
             // get and return all the todos after you create another
             getTodos(res);
@@ -60,7 +59,7 @@ exports.deleteTD = function(req, res) {
             _id : req.params.todo_id
         }, function(err, todo) {
             if (err)
-                res.send(err);
+                res(err);
 
             getTodos(res);
         });
@@ -90,12 +89,12 @@ exports.index = function(req, res){
                 req.auth.session.set({
                     code: code,
                     sid: sid,
-                    uid: uid
-                })
-                res.redirect('/statuses')
-            })
+                    uid: user_id
+                })   
+                res.redirect('/')
+            });
         })
-    };
+    }
 
     exports.statuses = function(req, res) {
         var code = req.auth.artifacts.code
@@ -117,20 +116,38 @@ exports.index = function(req, res){
         });
     };
 
-    exports.create = function (req, res){
+    exports.createTD = function (req, res){
         var code = req.auth.artifacts.code
         var sid = req.auth.artifacts.sid
         bufferapp.login(code, function (error, user) {
             if (error){
                     console.log(error + " --login CREATEnono")
             }
-            user.createStatus("I failed to " + req.payload.task + "! Hopefully posting this through bit.ly/blitzitio will mean I do better next time" , [sid], function(error, callback){
+            user.createStatus("I failed to " + req.payload.text + "! Hopefully posting this through bit.ly/blitzitio will mean I do better next time" , [sid], function(error, callback){
                 if (error){
                     console.log(error)
                 }
                 console.log("I sure this MUST have posted" + JSON.stringify(callback) + "--the sid--" + sid + "--the code--" + code)
             })
-            res('wootwoo')
+
+            user.getBufferedUpdates(sid, function(error, callback){
+                    if (error){
+                        console.log(error)
+                    }
+                     Todo.create({
+                        text : callback.updates[0].text,
+                        day: callback.updates[0].day,
+                        time: callback.updates[0].due_time,
+                        bid: callback.updates[0].id,
+                        done : false
+                    }, function(err, todo) {
+                        if (err)
+                            res(err);
+
+                    // get and return all the todos after you create another
+                    getTodos(res);
+
+            res('/')
         });
     }
 

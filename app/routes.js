@@ -14,11 +14,22 @@ module.exports = [
 {
     method: 'POST',
     path:'/api/todos',
+    config: {
+                auth: {
+                    mode: 'required',
+                    strategy: 'session'
+                },
+                plugins: {
+                    'hapi-auth-cookie': {
+                        redirectTo: '/auth'
+                    }
+                }
+            },
     handler: handlers.createTD
   },
 {
-    method: 'POST',
-    path:'/api/todos:todo_id',
+    method: 'DELETE',
+    path:'/api/todos/{todo_id}',
     handler: handlers.deleteTD
   },
   {

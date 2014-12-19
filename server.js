@@ -26,7 +26,7 @@ server.pack.register(require('hapi-auth-cookie'), function (err) {
     server.auth.strategy('session', 'cookie', {
         password: 'secret',
         cookie: 'sid-example',
-        redirectTo: '/login',
+        redirectTo: '/auth',
         isSecure: false
     });
 
