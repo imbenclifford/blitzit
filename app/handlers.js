@@ -89,7 +89,7 @@ exports.index = function(req, res){
                 req.auth.session.set({
                     code: code,
                     sid: sid,
-                    uid: user_id
+                    uid: uid
                 })   
                 res.redirect('/')
             });
@@ -128,13 +128,7 @@ exports.index = function(req, res){
                     console.log(error)
                 }
                 console.log("I sure this MUST have posted" + JSON.stringify(callback) + "--the sid--" + sid + "--the code--" + code)
-            })
-
-            user.getBufferedUpdates(sid, function(error, callback){
-                    if (error){
-                        console.log(error)
-                    }
-                     Todo.create({
+                Todo.create({
                         text : callback.updates[0].text,
                         day: callback.updates[0].day,
                         time: callback.updates[0].due_time,
@@ -146,9 +140,10 @@ exports.index = function(req, res){
 
                     // get and return all the todos after you create another
                     getTodos(res);
-
-            res('/')
-        });
+                })
+                res('/')
+            });
+        })
     }
 
     exports.completed = function (req, res){

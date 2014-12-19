@@ -4,8 +4,15 @@ module.exports = [
 {
     method: 'GET',
     path:'/',
+    config: {  // try with redirectTo disabled makes isAuthenticated usefully available
+            auth: {
+                strategy: 'session',
+                mode: 'required'
+            },
+            plugins: { 'hapi-auth-cookie': { redirectTo: '/auth' } }
+        },
     handler: handlers.index
-  },
+  },    
 {
     method: 'GET',
     path:'/api/todos',
@@ -74,7 +81,7 @@ module.exports = [
                 },
                 plugins: {
                     'hapi-auth-cookie': {
-                        redirectTo: false
+                        redirectTo: '/auth'
                     }
                 }
             },
