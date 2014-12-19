@@ -1,5 +1,10 @@
 var Hapi = require("hapi");
-var Routes = require('./routes.js')
+var Routes = require('./app/routes.js');
+var mongoose = require('mongoose');
+var config = require('./config');
+var db = config.db;
+
+mongoose.connect(db);
 
 var serverOpts = {
     debug: {
