@@ -37,6 +37,17 @@ module.exports = [
 {
     method: 'DELETE',
     path:'/api/todos/{todo_id}',
+    config: {
+                auth: {
+                    mode: 'try',
+                    strategy: 'session'
+                },
+                plugins: {
+                    'hapi-auth-cookie': {
+                        redirectTo: false
+                    }
+                }
+            },
     handler: handlers.deleteTD
   },
   {
@@ -118,6 +129,24 @@ module.exports = [
                 }
             },
     handler: handlers.completed
+},
+{
+    method: 'GET',
+    path: '/test',
+    config: {
+                auth: {
+                    mode: 'required',
+                    strategy: 'session'
+                },
+                plugins: {
+                    'hapi-auth-cookie': {
+                        redirectTo: '/auth'
+                    }
+                }
+            },
+    handler: function (req, res) {
+        res("it's true")
+    }
 },
 {
   method : "GET",

@@ -54,7 +54,7 @@ exports.create = function(req, res) {
     };
 
     // delete a todo
-exports.deleteTD = function(req, res) {
+exports.completed = function(req, res) {
         Todo.remove({
             _id : req.params.todo_id
         }, function(err, todo) {
@@ -66,6 +66,15 @@ exports.deleteTD = function(req, res) {
     };
 
 exports.index = function(req, res){
+    var user = req.auth.artifacts.user;
+    var sid;
+    var uid;
+    req.auth.session.set({
+                    user: user,
+                    sid: sid,
+                    uid: uid
+                })
+    console.log('wanna see some code? Here it is: ' + JSON.stringify(req.auth))
     res.file('./public/index.html')
 }
 
@@ -83,21 +92,23 @@ exports.index = function(req, res){
             if (error){
                     console.log(error + " --login nono")
             }
+            console.log("the user is " + JSON.stringify(user))
             user.getAllProfiles(function(err, info) {
                 sid = info[0]._id;
                 uid = info[0].user_id
                 req.auth.session.set({
-                    code: code,
+                    user: user,
                     sid: sid,
                     uid: uid
-                })   
+                })
+                console.log("here I am" + code)
                 res.redirect('/')
             });
         })
     }
 
     exports.statuses = function(req, res) {
-        var code = req.auth.artifacts.code
+        var user = req.auth.artifacts.user
         var sid = req.auth.artifacts.sid
         bufferapp.login(code, function (error, user) {
             if (error){
@@ -107,6 +118,9 @@ exports.index = function(req, res){
                 if (error){
                     console.log(error)
                 }
+                req.auth.session.set({
+                    code: code
+                })
             console.log("THIS IS WHAT I WAS LOOKING 44444 " + JSON.stringify(callback))
             res.view('updates.swig', {status: callback.updates[0].text,
                                         date: callback.updates[0].day,
@@ -114,52 +128,59 @@ exports.index = function(req, res){
                                         id: callback.updates[0].id})
             })
         });
-    };
-
-    exports.createTD = function (req, res){
-        var code = req.auth.artifacts.code
-        var sid = req.auth.artifacts.sid
-        bufferapp.login(code, function (error, user) {
-            if (error){
-                    console.log(error + " --login CREATEnono")
-            }
-            user.createStatus("I failed to " + req.payload.text + "! Hopefully posting this through bit.ly/blitzitio will mean I do better next time" , [sid], function(error, callback){
-                if (error){
-                    console.log(error)
-                }
-                console.log("I sure this MUST have posted" + JSON.stringify(callback) + "--the sid--" + sid + "--the code--" + code)
-                Todo.create({
-                        text : callback.updates[0].text,
-                        day: callback.updates[0].day,
-                        time: callback.updates[0].due_time,
-                        bid: callback.updates[0].id,
-                        done : false
-                    }, function(err, todo) {
-                        if (err)
-                            res(err);
-
-                    // get and return all the todos after you create another
-                    getTodos(res);
-                })
-                res('/')
-            });
-        })
+        console.log("THIS IS WHAT I WAS LOOKING 44444 " + JSON.stringify(callback))
+        res.view('updates.swig', {status: callback.updates[0].text,
+                                    date: callback.updates[0].day,
+                                    time: callback.updates[0].due_time,
+                                    id: callback.updates[0].id})
     }
 
-    exports.completed = function (req, res){
-        console.log('LOAD THIS' + JSON.stringify(req.payload))
-        var code = req.auth.artifacts.code
+    exports.createTD = function (req, res){
+        var user = req.auth.artifacts.user
         var sid = req.auth.artifacts.sid
-        bufferapp.login(code, function (error, user) {
+        //Creating ToDo on BufferApp
+        user.createStatus("Test: " + req.payload.text + " testo!" , [sid], false, false, false, [], req.payload.date, function(error, callback){
             if (error){
-                    console.log(error + " --login COMPLETEnono")
+                console.log(error)
             }
-            user.updateStatus(req.payload.id, "I just " + req.payload.task + "! I'm not showing off - bit.ly/blitzitio posted this on my behalf" , false, [], false, 1515582000, function(error, callback){
-                if (error){
-                    console.log(error)
-                }
-                console.log("HOPES this has posted " + JSON.stringify(callback) + "--the sid--" + sid + "--the code--" + code)
+            console.log("I sure this MUST have posted" + JSON.stringify(callback) + "--the sid--" + sid + "--the code--" + code)
+            req.auth.session.set({
+                user: user
             })
-            res('twootwoow')
+            //Creating ToDo on the database
+            Todo.create({
+                    text : req.payload.text,
+                    date: req.payload.date,
+                    done : false
+                }, function(err, todo) {
+                    if (err)
+                        res(err);
+
+                // get and return all the todos after you create another
+                getTodos(res);
+                })
         });
+    }
+
+    exports.deleteTD = function (req, res){
+        console.log('LOAD THIS' + JSON.stringify(req.auth))
+        var user = req.auth.artifacts.user
+        var sid = req.auth.artifacts.sid
+        user.updateStatus(req.params.todo_id, "Completed " + req.payload.task + "! Testo" , false, [], false, function(error, callback){
+            if (error){
+                console.log(error)
+            }
+            console.log("HOPES this has posted " + JSON.stringify(callback) + "--the sid--" + sid + "--the code--" + code)
+            req.auth.session.set({
+                code: code
+            })
+        Todo.remove({
+            _id : req.params.todo_id
+            }, function(err, todo) {
+            if (err)
+                res(err);
+
+            getTodos(res);
+            });
+        })
     }

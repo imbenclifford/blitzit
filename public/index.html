@@ -8,7 +8,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Optimize mobile viewport -->
 
-    <title>Node/Angular Todo App</title>
+    <title>Blitzit</title>
 
     <!-- SCROLLS -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"><!-- load bootstrap -->
@@ -32,7 +32,7 @@
 
         <!-- HEADER AND TODO COUNT -->
         <div class="jumbotron text-center">
-            <h1>I'm a Todo-aholic <span class="label label-info">{{ todos.length }}</span></h1>
+            <h1>Blitzit <span class="label label-info">{{ todos.length }}</span></h1>
         </div>
 
         <!-- TODO LIST -->
@@ -42,7 +42,8 @@
                 <!-- LOOP OVER THE TODOS IN $scope.todos -->
                 <div class="checkbox" ng-repeat="todo in todos">
                     <label>
-                        <input type="checkbox" ng-click="deleteTodo(todo._id)"> {{ todo.text }} {{ todo.date }}
+                        <input type="checkbox" ng-click="deleteTodo(todo._id)">
+                        {{ todo.text }} {{ todo.date | date: "dd MMM" }} {{ todo.date | date: "HH:mm" }}
                     </label>
                 </div>
 
@@ -56,8 +57,8 @@
                     <div class="form-group">
 
                         <!-- BIND THIS VALUE TO formData.text IN ANGULAR -->
-                        <input type="text" class="form-control input-lg text-center" placeholder="I want to buy a puppy that will love me forever" ng-model="formData.text">
-                        <input type="date" class="form-control input-lg text-center" placeholder="I want to buy a puppy that will love me forever" ng-model="formData.date">
+                        <input type="text" class="form-control input-lg text-center" placeholder="What do you want to do?" ng-model="formData.text">
+                        <input type="datetime-local" class="form-control input-lg" placeholder="When do you want it done by?" ng-model="formData.date">
                     </div>
 
                     <!-- createToDo() WILL CREATE NEW TODOS -->
